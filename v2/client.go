@@ -962,3 +962,13 @@ func (c *Client) NewSubAccountListService() *SubAccountListService {
 func (c *Client) NewGetUserAsset() *GetUserAssetService {
 	return &GetUserAssetService{c: c}
 }
+
+// NewSubaccountIpRestrictionService Enable or Disable IP Restriction for a Sub-account API Key
+func (c *Client) NewSubaccountIpRestrictionService() *SubaccountIpRestrictionService {
+	return &SubaccountIpRestrictionService{c: c}
+}
+
+// SubaccountIpRestrictionAddService Add IP List for a Sub-account API Key
+func (c *Client) NewSubaccountIpRestrictionAddService() *SubaccountIpRestrictionAddService {
+	return &SubaccountIpRestrictionAddService{c: c}
+}

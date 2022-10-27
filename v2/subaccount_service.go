@@ -336,3 +336,144 @@ type SubAccount struct {
 	IsManagedSubAccount         bool   `json:"isManagedSubAccount"`
 	IsAssetManagementSubAccount bool   `json:"isAssetManagementSubAccount"`
 }
+
+// 新增为子账户API Key开启/关闭IP白名单
+type SubaccountIpRestrictionService struct {
+	c                *Client
+	email            string
+	subAccountApiKey string
+	ipRestrict       bool
+	method           string
+}
+
+// Email set email
+func (s *SubaccountIpRestrictionService) Email(email string) *SubaccountIpRestrictionService {
+	s.email = email
+	return s
+}
+
+// SubAccountApiKey set SubAccountApiKey
+func (s *SubaccountIpRestrictionService) SubAccountApiKey(subAccountApiKey string) *SubaccountIpRestrictionService {
+	s.subAccountApiKey = subAccountApiKey
+	return s
+}
+
+// ipRestrict set ipRestrict
+func (s *SubaccountIpRestrictionService) IpRestrict(ipRestrict bool) *SubaccountIpRestrictionService {
+	s.ipRestrict = ipRestrict
+	return s
+}
+
+// IpAddress set ipAddress
+func (s *SubaccountIpRestrictionService) IpList() *SubaccountIpRestrictionService {
+	s.method = "GET"
+	return s
+}
+
+func (s *SubaccountIpRestrictionService) subaccountIpRestrictions(ctx context.Context, endpoint string, opts ...RequestOption) (data []byte, err error) {
+	if s.method == "" {
+		s.method = "POST"
+	}
+	r := &request{
+		method:   s.method,
+		endpoint: endpoint,
+		secType:  secTypeSigned,
+	}
+	m := params{
+		"email":            s.email,
+		"subAccountApiKey": s.subAccountApiKey,
+		"ipRestrict":       s.ipRestrict,
+	}
+	r.setParams(m)
+	data, err = s.c.callAPI(ctx, r, opts...)
+	if err != nil {
+		return []byte{}, err
+	}
+	return data, nil
+}
+
+// Do send request
+func (s *SubaccountIpRestrictionService) Do(ctx context.Context, opts ...RequestOption) (res *SubaccountIpRestrictionResponse, err error) {
+	data, err := s.subaccountIpRestrictions(ctx, "/sapi/v1/sub-account/subAccountApi/ipRestriction", opts...)
+	if err != nil {
+		return nil, err
+	}
+	res = &SubaccountIpRestrictionResponse{}
+	err = json.Unmarshal(data, res)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+type SubaccountIpRestrictionResponse struct {
+	IPRestrict string   `json:"ipRestrict"`
+	IPList     []string `json:"ipList"`
+	UpdateTime int64    `json:"updateTime"`
+	APIKey     string   `json:"apiKey"`
+}
+
+// 新增为子账户API Key添加IP白名单功能
+type SubaccountIpRestrictionAddService struct {
+	c                *Client
+	email            string
+	subAccountApiKey string
+	ipAddress        string
+}
+
+// Email set email
+func (s *SubaccountIpRestrictionAddService) Email(email string) *SubaccountIpRestrictionAddService {
+	s.email = email
+	return s
+}
+
+// SubAccountApiKey set subAccountApiKey
+func (s *SubaccountIpRestrictionAddService) SubAccountApiKey(subAccountApiKey string) *SubaccountIpRestrictionAddService {
+	s.subAccountApiKey = subAccountApiKey
+	return s
+}
+
+// IpAddress set ipAddress
+func (s *SubaccountIpRestrictionAddService) IpAddress(ipAddress string) *SubaccountIpRestrictionAddService {
+	s.ipAddress = ipAddress
+	return s
+}
+
+func (s *SubaccountIpRestrictionAddService) subaccountIpRestrictionAdds(ctx context.Context, endpoint string, opts ...RequestOption) (data []byte, err error) {
+	r := &request{
+		method:   "POST",
+		endpoint: endpoint,
+		secType:  secTypeSigned,
+	}
+	m := params{
+		"email":            s.email,
+		"subAccountApiKey": s.subAccountApiKey,
+		"ipAddress":        s.ipAddress,
+	}
+	r.setParams(m)
+	data, err = s.c.callAPI(ctx, r, opts...)
+	if err != nil {
+		return []byte{}, err
+	}
+	return data, nil
+}
+
+// Do send request
+func (s *SubaccountIpRestrictionAddService) Do(ctx context.Context, opts ...RequestOption) (res *SubaccountIpRestrictionAddResponse, err error) {
+	data, err := s.subaccountIpRestrictionAdds(ctx, "/sapi/v1/sub-account/subAccountApi/ipRestriction/ipList", opts...)
+	if err != nil {
+		return nil, err
+	}
+	res = &SubaccountIpRestrictionAddResponse{}
+	err = json.Unmarshal(data, res)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+type SubaccountIpRestrictionAddResponse struct {
+	IP         string `json:"ip"`
+	UpdateTime int64  `json:"updateTime"`
+	APIKey     string `json:"apiKey"`
+}
