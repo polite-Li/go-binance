@@ -8,7 +8,7 @@ A Golang SDK for [binance](https://www.binance.com) API.
 
 ### REST API
 
-#### Get Order
+#### SubAccount
 
 ```golang
 var accountClient = binance.NewClient(apiKey, secretKey)
