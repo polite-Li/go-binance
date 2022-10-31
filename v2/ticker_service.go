@@ -4,7 +4,7 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/adshao/go-binance/v2/common"
+	"github.com/polite-Li/go-binance/v2/common"
 )
 
 // ListBookTickersService list best price/qty on the order book for a symbol or symbols
@@ -238,7 +238,6 @@ func (s *ListSymbolTickerService) Symbols(symbols []string) *ListSymbolTickerSer
 // - 1h, 2h....23h - for hours
 //
 // - 1d...7d - for days
-//
 //
 // Units cannot be combined (e.g. 1d2h is not allowed).
 //
